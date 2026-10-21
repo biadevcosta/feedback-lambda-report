@@ -1,31 +1,31 @@
 # feedback-lambda-relatorio
 
-Lambda de **relatório semanal** da Plataforma de Feedback de Aulas (Tech Challenge fase 4).
+**Weekly report** Lambda for the Class Feedback Platform (Tech Challenge phase 4).
 
-Agendada pelo **EventBridge** para toda segunda-feira às 8h de Brasília (`cron(0 11 ? * MON *)`, em UTC). Consulta os últimos 7 dias no DynamoDB e envia o resumo por e-mail aos admins via SES.
+Scheduled by **EventBridge** every Monday at 8am Brasília time (`cron(0 11 ? * MON *)`, in UTC). Queries the last 7 days in DynamoDB and emails the summary to admins via SES.
 
-- **Função AWS:** `feedback-relatorio` · **Runtime:** Python 3.12 · **Região:** `sa-east-1`
-- **Permissões:** `dynamodb:Query` no índice `por-dia` e `ses:SendEmail`
+- **AWS function:** `feedback-relatorio` · **Runtime:** Java 21 (Maven) · **Region:** `sa-east-1`
+- **Permissions:** `dynamodb:Query` on the `by-day` index and `ses:SendEmail`
 
-## Conteúdo do relatório
+## Report content
 
-- Média das notas dos últimos 7 dias
-- Quantidade de avaliações por dia e por urgência
-- Lista com descrição, urgência e data de envio
+- Average score over the last 7 days
+- Count of evaluations per day and per urgency level
+- List with description, urgency and submission date
 
-## Estrutura (em construção)
+## Structure (in progress)
 
 ```
-src/handler.py          # lambda_handler
-tests/                  # pytest para média e contagens
-requirements-dev.txt
+pom.xml
+src/main/java/com/feedback/relatorio/ReportHandler.java
+src/test/java/...              # JUnit5 + Mockito, average/count tests
 .github/workflows/ci-cd.yml
 ```
 
-## Repositórios relacionados
+## Related repositories
 
 `feedback-infra` · `feedback-lambda-ingestao` · `feedback-lambda-notificacao`
 
 ## Status
 
-Acompanhe o andamento em [PLANO.md](PLANO.md).
+Track progress in [PLANO.md](PLANO.md).

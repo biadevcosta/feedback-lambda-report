@@ -9,7 +9,7 @@ Como pedir ao Claude: `Execute a tarefa X.Y do PLANO.md` (uma por sessão; use /
 
 ### Fase 5 - Relatório
 
-- [ ] **5.4** handler.py: consultar os últimos 7 dias, calcular a média, a quantidade por dia e por urgência e listar descrição, urgência e data
+- [ ] **5.4** ReportHandler.java: consultar os últimos 7 dias, calcular a média, a quantidade por dia e por urgency e listar description, urgency e data
   - Validar: Teste local devolve os números esperados
   - Depende de: 5.2
 
@@ -17,8 +17,8 @@ Como pedir ao Claude: `Execute a tarefa X.Y do PLANO.md` (uma por sessão; use /
   - Validar: E-mail de teste aparece bem formatado
   - Depende de: 5.4
 
-- [ ] **5.6** Testes unitários (pytest) para a média e as contagens
-  - Validar: pytest verde
+- [ ] **5.6** Testes unitários (JUnit5 + Mockito) para a média e as contagens
+  - Validar: mvn test verde
   - Depende de: 5.4
 
 - [ ] **5.7** Workflow de CI/CD (copiar o modelo da ingestão)
