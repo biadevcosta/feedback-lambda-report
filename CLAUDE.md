@@ -1,20 +1,21 @@
-# feedback-lambda-relatorio
+# feedback-lambda-report
 
 ## Projeto
 Plataforma de feedback de aulas (Tech Challenge, fase 4), serverless na AWS. O aluno envia `POST /evaluations` com `{"description": string, "score": int 0 a 10}`. Os administradores recebem e-mail de urgência e um relatório semanal.
 
 ## Os 4 repositórios
 - feedback-infra: Terraform de toda a infraestrutura e a documentação geral
-- feedback-lambda-ingestao: recebe a avaliação e grava no DynamoDB
-- feedback-lambda-notificacao: avisa os admins por e-mail quando a urgência é alta
-- feedback-lambda-relatorio: gera e envia o relatório semanal
+- feedback-lambda-ingestion: recebe a avaliação e grava no DynamoDB
+- feedback-lambda-notification: avisa os admins por e-mail quando a urgência é alta
+- feedback-lambda-report: gera e envia o relatório semanal
 
 ## Convenções (definidas na tarefa 0.5; ajuste aqui se o grupo mudar)
 - Região AWS: sa-east-1 (São Paulo) - CONFIRMADA. Prefixo de nomes: `feedback-`
-- Funções: `feedback-ingestao`, `feedback-notificacao`, `feedback-relatorio`. Java 21 (Maven), AWS SDK v2
+- Funções: `feedback-ingestion`, `feedback-notification`, `feedback-report`. Java 21 (Maven), AWS SDK v2
 - Grupos do Cognito: `students` e `admins`
 - Idioma: código Java, comentários, nomes de variáveis/recursos de código e README em inglês. CLAUDE.md e PLANO.md continuam em português.
 - Custos: a conta AWS **não tem free tier**. Antes de pedir pra criar/alterar qualquer recurso na AWS (fora do Terraform da infra, ex.: testar algo manualmente), avise o custo estimado e peça confirmação.
+- Economia de requisições (orçamento de US$ 4/mês, sem dinheiro para excedente): o projeto é para entregar e rodar poucas vezes. Testes contra a AWS real só com o mínimo de chamadas, uma por vez e de forma manual. Proibido teste de carga, loops, scripts repetitivos ou agendamentos extras de teste. Testes automatizados (`mvn test`) usam mocks e nunca chamam a AWS. Antes de qualquer chamada real à API ou à AWS, diga quantas chamadas serão feitas.
 
 ## Contrato de dados (igual nos 4 repositórios)
 Tabela `Evaluations`, chave `evaluationId` (string, UUID). Atributos: `userId` (sub do Cognito), `description`, `score` (número), `urgency` (`high`, `medium` ou `low`), `submittedAt` (ISO 8601 em UTC) e `day` (AAAA-MM-DD no horário de Brasília, UTC-3 fixo).
@@ -31,7 +32,7 @@ Tabela `Evaluations`, chave `evaluationId` (string, UUID). Atributos: `userId` (
 
 ## Esta função
 Disparada pelo EventBridge toda segunda às 8h (Brasília). Gera o relatório da semana e envia por e-mail aos admins (SES).
-- Estrutura: `pom.xml`, `src/main/java/com/feedback/relatorio/ReportHandler.java` (implementa `RequestHandler<ScheduledEvent, Void>`), `src/test/java/...`, `.github/workflows/ci-cd.yml` e `README.md`.
+- Estrutura: `pom.xml`, `src/main/java/com/feedback/report/ReportHandler.java` (implementa `RequestHandler<ScheduledEvent, Void>`), `src/test/java/...`, `.github/workflows/ci-cd.yml` e `README.md`.
 - Dependências: `aws-lambda-java-core`, `aws-lambda-java-events`, AWS SDK v2 (`dynamodb`, `cognitoidentityprovider`, `ses`), `maven-shade-plugin`.
 - Variáveis de ambiente: `TABLE_NAME`, `INDEX_NAME` (`by-day`), `USER_POOL_ID`, `ADMIN_GROUP`, `SES_SENDER` e `DAYS` (7).
 - Consultar o índice `by-day` com um Query por dia da janela, com paginação (`DynamoDbClient.queryPaginator`). Nunca usar Scan.

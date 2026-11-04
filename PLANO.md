@@ -1,4 +1,4 @@
-# Plano - feedback-lambda-relatorio
+# Plano - feedback-lambda-report
 
 Tarefas extraídas da planilha de planejamento. Siga a ordem e respeite "Depende de".
 Ao validar uma tarefa, troque `[ ]` por `[x]`.
@@ -35,6 +35,6 @@ Como pedir ao Claude: `Execute a tarefa X.Y do PLANO.md` (uma por sessão; use /
 
 Confirme com o time que estas tarefas já foram concluídas antes de começar.
 
-- **5.2** (feedback-infra): Função de relatório com permissões Query no índice por-dia e ses:SendEmail
-- **5.3** (feedback-infra): Role OIDC do repositório feedback-lambda-relatorio, só com lambda:UpdateFunctionCode nesta função
+- **5.2** (feedback-infra): Função de relatório com permissões Query no índice by-day e ses:SendEmail
+- **5.3** (feedback-infra): Role OIDC do repositório feedback-lambda-report, só com lambda:UpdateFunctionCode nesta função
 - **5.8** (grupo): Disparar o relatório manualmente e conferir o e-mail
