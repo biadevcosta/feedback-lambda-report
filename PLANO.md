@@ -9,15 +9,16 @@ Como pedir ao Claude: `Execute a tarefa X.Y do PLANO.md` (uma por sessão; use /
 
 ### Fase 5 - Relatório
 
-- [ ] **5.4** ReportHandler.java: consultar os últimos 7 dias, calcular a média, a quantidade por dia e por urgency e listar description, urgency e data
+- [x] **5.4** ReportHandler.java: consultar os últimos 7 dias, calcular a média, a quantidade por dia e por urgency e listar description, urgency e data
   - Validar: Teste local devolve os números esperados
   - Depende de: 5.2
 
 - [ ] **5.5** Montar o e-mail do relatório (HTML simples) e enviar pelo SES
   - Validar: E-mail de teste aparece bem formatado
   - Depende de: 5.4
+  - Obs: Código e testes prontos (ReportEmailRenderer + SesEmailSender); a conferência visual do e-mail real fica para o teste final (5.8)
 
-- [ ] **5.6** Testes unitários (JUnit5 + Mockito) para a média e as contagens
+- [x] **5.6** Testes unitários (JUnit5 + Mockito) para a média e as contagens
   - Validar: mvn test verde
   - Depende de: 5.4
 
