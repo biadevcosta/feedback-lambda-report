@@ -32,10 +32,10 @@ Tabela `Evaluations`, chave `evaluationId` (string, UUID). Atributos: `userId` (
 
 ## Esta função
 Disparada pelo EventBridge toda segunda às 8h (Brasília). Gera o relatório da semana e envia por e-mail aos admins (SES).
-- Estrutura: `pom.xml`, `src/main/java/com/feedback/report/ReportHandler.java` (implementa `RequestHandler<ScheduledEvent, Void>`), `src/test/java/...`, `.github/workflows/ci-cd.yml` e `README.md`.
-- Dependências: `aws-lambda-java-core`, `aws-lambda-java-events`, AWS SDK v2 (`dynamodb`, `cognitoidentityprovider`, `ses`), `maven-shade-plugin`.
+- Arquitetura e testes: seguir a skill `java-lambda-standard` (hexagonal: `domain/` com `ReportPeriod`, `WeeklyReportCalculator` e `ReportEmailRenderer` puros, `application/` com `SendWeeklyReportUseCase` e as portas `EvaluationQueryRepository`, `AdminDirectory` e `EmailSender`, `adapter/in/scheduler/`, `adapter/out/dynamodb/`, `adapter/out/cognito/`, `adapter/out/ses/`, `config/`). `ReportHandler.java` (`RequestHandler<ScheduledEvent, Void>`) na raiz do pacote só faz o bootstrap. Build com `./mvnw verify`.
+- Dependências: `aws-lambda-java-core`, `aws-lambda-java-events`, AWS SDK v2 (`dynamodb`, `cognitoidentityprovider`, `ses`, com `url-connection-client`), `maven-shade-plugin`. Testes: JUnit5, Mockito, AssertJ, ArchUnit e `aws-lambda-java-serialization`.
 - Variáveis de ambiente: `TABLE_NAME`, `INDEX_NAME` (`by-day`), `USER_POOL_ID`, `ADMIN_GROUP`, `SES_SENDER` e `DAYS` (7).
-- Consultar o índice `by-day` com um Query por dia da janela, com paginação (`DynamoDbClient.queryPaginator`). Nunca usar Scan.
+- Consultar o índice `by-day` com um Query por dia da janela, com paginação (laço com `lastEvaluatedKey`, mais fácil de testar com mock). Nunca usar Scan.
 - Janela (sugestão, documentar no README): os 7 dias completos anteriores à execução, no horário de Brasília.
 - Conteúdo: média dos scores (1 casa decimal), total de avaliações, quantidade por dia (incluindo dias com 0), quantidade por urgency e a lista com Description, Urgency e Submitted at. Sem avaliações na semana, enviar e-mail avisando.
 - Separar classes/métodos puros (média, contagens e montagem do HTML) para testar fácil. O handler só orquestra.
